@@ -1,0 +1,370 @@
+{% extends "base.html" %}
+
+{% block mapHead %}
+
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	  <style type="text/css">
+	      html { height: 100% }
+	      body { height: 100%; margin: 0; padding: 0 }
+	      #map_canvas { height: 600px; width: 600px; margin-left:200px; }
+	  </style>
+	  <script type="text/javascript"
+	      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXXvkVofRqiWA0NIwLWYFSkL_qvXcm7kY&sensor=false">
+	  </script>
+	  
+	  <script src="/static/newmap.js"></script>
+{% endblock %}
+{% block body %}
+
+<body onload="initialize()">
+  <div class="container">
+    <div class="row-fluid">
+      <div class="span6">
+        <a href="/" class="main-title">
+          <h1>Happy Hour Map</h1>
+
+        </a>
+      </div>
+      <div class="span6">       
+        <div id="searchbar">
+          <form  class="form-search" name="search" action="javascript:search()">
+            <span><h5>Enter your zip code to search for happy hours near you.</h5></span>
+            <input id="search" type="textbox" placeholder="Enter Zip">
+            <input type="submit" value="New Search" class="btn btn-primary">
+          </form>
+        </div>    
+      </div>
+    </div>
+
+    <div class="row-fluid">  
+      <div class="span12" id="map_canvas"></div>
+    </div>
+
+    <div class="row-fluid">
+      <div class="span6">
+        <br/>
+        <p><h3>Or add a new Happy Hour to the map:</h3></p>
+      </div>
+      <div class="span6">
+        <br/><br/>
+          <a href="#myModal" role="button" class="btn btn-info" data-toggle="modal">Add a New Happy Hour</a>
+          <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              <h3 id="myModalLabel">Add a New Happy Hour</h3>
+            </div>
+            <div class="modal-body">
+              <form name="newloc" action="javascript:checkAddress()">
+                <div class="row-fluid">
+                  <div class="span6">
+                    <label class="newloc">Name</label>
+                    <input id="name" type="textbox">
+                  </div>
+                  <div class="span6">
+                    <label class="newloc">Address</label>
+                    <input  id="address" type="textbox"> 
+                  </div>
+                </div>
+                <div class="row-fluid">
+                  <div class="span6">
+                    <label class="newloc">City</label>
+                    <input  id="city" type="textbox">
+                  </div> 
+                  <div class="span6">
+                    <label class="newloc">State</label>
+                    <input  id="state" type="textbox" >
+                  </div>
+                </div>
+                <div class="row-fluid">
+                  <div class="span6">
+                    <label class="newloc">Zip Code</label>
+                    <input  id="zip" type="textbox">
+                  </div>
+                </div>
+
+                <div class="row-fluid">
+                  <div class="span6">
+                    <lable class="newloc">Start Time:</label>
+                    <select id="start">
+                      <option value="5:00 AM">5:00 AM</option>
+                      
+                      <option value="5:30 AM">5:30 AM</option>
+                      
+                       
+                      <option value="6:00 AM">6:00 AM</option>
+                      
+                      <option value="6:30 AM">6:30 AM</option>
+                      
+                       
+                      <option value="7:00 AM">7:00 AM</option>
+                      
+                      <option value="7:30 AM">7:30 AM</option>
+                      
+                       
+                      <option value="8:00 AM">8:00 AM</option>
+                      
+                      <option value="8:30 AM">8:30 AM</option>
+                      
+                       
+                      <option value="9:00 AM">9:00 AM</option>
+                      
+                      <option value="9:30 AM">9:30 AM</option>
+                      
+                       
+                      <option value="10:00 AM">10:00 AM</option>
+                      
+                      <option value="10:30 AM">10:30 AM</option>
+                      
+                       
+                      <option value="11:00 AM">11:00 AM</option>
+                      
+                      <option value="11:30 AM">11:30 AM</option>
+                      
+                       
+                      <option value="12:00 PM">12:00 PM</option>
+                      
+                      <option value="12:30 PM">12:30 PM</option>
+                      
+                       
+                      <option value="1:00 PM">1:00 PM</option>
+                      
+                      <option value="1:30 PM">1:30 PM</option>
+                      
+                       
+                      <option value="2:00 PM">2:00 PM</option>
+                      
+                      <option value="2:30 PM">2:30 PM</option>
+                      
+                       
+                      <option value="3:00 PM">3:00 PM</option>
+                      
+                      <option value="3:30 PM">3:30 PM</option>
+                      
+                       
+                      <option value="4:00 PM">4:00 PM</option>
+                      
+                      <option value="4:30">4:30 PM</option>
+                      
+                       
+                      <option value="5:00 PM">5:00 PM</option>
+                      
+                      <option value="5:30 PM">5:30 PM</option>
+                      
+                       
+                      <option value="6:00 PM">6:00 PM</option>
+                      
+                      <option value="6:30 PM">6:30 PM</option>
+                     
+                       
+                      <option value="7:00 PM">7:00 PM</option>
+                      
+                      <option value="7:30 PM">7:30 PM</option>
+                      
+                      <option value="8:00 PM">8:00 PM</option>
+                      
+                      <option value="8:30 PM">8:30 PM</option>
+                      
+                       
+                      <option value="9:00 PM">9:00 PM</option>
+                      
+                      <option value="9:30 PM">9:30 PM</option>
+                      
+                       
+                      <option value="10:00 PM">10:00 PM</option>
+                      
+                      <option value="10:30 PM">10:30 PM</option>
+                      
+                       
+                      <option value="11:00 PM">11:00 PM</option>
+                      
+                      <option value="11:30 PM">11:30 PM</option>
+
+                      <option value="12:00 AM">12:00 AM</option>
+                      
+                      <option value="12:30 AM">12:30 AM</option>
+                      
+                      <option value="1:00 AM">1:00 AM</option>
+                      
+                      <option value="1:30 AM">1:30 AM</option>
+
+                      <option value="2:00 AM">2:00 AM</option>
+                      
+                      <option value="2:30 AM">2:30 AM</option>
+
+                      <option value="3:00 AM">3:00 AM</option>
+                      
+                      <option value="3:30 AM">3:30 AM</option>
+                      <option value="4:00 AM">4:00 AM</option>
+                      
+                      <option value="4:30 AM">4:30 AM</option>
+                    </select>
+                  </div>
+                  <div class="span6">
+                    <lable class="newloc">End Time:</label>
+                    <select id="end">
+                      <option value="5:00 AM">5:00 AM</option>
+                      
+                      <option value="5:30 AM">5:30 AM</option>
+                      
+                       
+                      <option value="6:00 AM">6:00 AM</option>
+                      
+                      <option value="6:30 AM">6:30 AM</option>
+                      
+                       
+                      <option value="7:00 AM">7:00 AM</option>
+                      
+                      <option value="7:30 AM">7:30 AM</option>
+                      
+                       
+                      <option value="8:00 AM">8:00 AM</option>
+                      
+                      <option value="8:30 AM">8:30 AM</option>
+                      
+                       
+                      <option value="9:00 AM">9:00 AM</option>
+                      
+                      <option value="9:30 AM">9:30 AM</option>
+                      
+                       
+                      <option value="10:00 AM">10:00 AM</option>
+                      
+                      <option value="10:30 AM">10:30 AM</option>
+                      
+                       
+                      <option value="11:00 AM">11:00 AM</option>
+                      
+                      <option value="11:30 AM">11:30 AM</option>
+                      
+                       
+                      <option value="12:00 PM">12:00 PM</option>
+                      
+                      <option value="12:30 PM">12:30 PM</option>
+                      
+                       
+                      <option value="1:00 PM">1:00 PM</option>
+                      
+                      <option value="1:30 PM">1:30 PM</option>
+                      
+                       
+                      <option value="2:00 PM">2:00 PM</option>
+                      
+                      <option value="2:30 PM">2:30 PM</option>
+                      
+                       
+                      <option value="3:00 PM">3:00 PM</option>
+                      
+                      <option value="3:30 PM">3:30 PM</option>
+                      
+                       
+                      <option value="4:00 PM">4:00 PM</option>
+                      
+                      <option value="4:30">4:30 PM</option>
+                      
+                       
+                      <option value="5:00 PM">5:00 PM</option>
+                      
+                      <option value="5:30 PM">5:30 PM</option>
+                      
+                       
+                      <option value="6:00 PM">6:00 PM</option>
+                      
+                      <option value="6:30 PM">6:30 PM</option>
+                     
+                       
+                      <option value="7:00 PM">7:00 PM</option>
+                      
+                      <option value="7:30 PM">7:30 PM</option>
+                      
+                      <option value="8:00 PM">8:00 PM</option>
+                      
+                      <option value="8:30 PM">8:30 PM</option>
+                      
+                       
+                      <option value="9:00 PM">9:00 PM</option>
+                      
+                      <option value="9:30 PM">9:30 PM</option>
+                      
+                       
+                      <option value="10:00 PM">10:00 PM</option>
+                      
+                      <option value="10:30 PM">10:30 PM</option>
+                      
+                       
+                      <option value="11:00 PM">11:00 PM</option>
+                      
+                      <option value="11:30 PM">11:30 PM</option>
+
+                      <option value="12:00 AM">12:00 AM</option>
+                      
+                      <option value="12:30 AM">12:30 AM</option>
+                      
+                      <option value="1:00 AM">1:00 AM</option>
+                      
+                      <option value="1:30 AM">1:30 AM</option>
+
+                      <option value="2:00 AM">2:00 AM</option>
+                      
+                      <option value="2:30 AM">2:30 AM</option>
+
+                      <option value="3:00 AM">3:00 AM</option>
+                      
+                      <option value="3:30 AM">3:30 AM</option>
+                      <option value="4:00 AM">4:00 AM</option>
+                      
+                      <option value="4:30 AM">4:30 AM</option>
+                    
+                    </select>
+                  </div>
+                </div>
+                <div class="row-fluid">
+
+                  <div class="span12">
+                    <label>Days </label>
+                    <label class="checkbox inline">
+                      <input type="checkbox" id="inlineCheckbox1" name="daycheck" value="0">Sunday 
+                    </label>
+                    <label class="checkbox inline">
+                      <input type="checkbox" id="inlineCheckbox2" name="daycheck" value="1">Monday 
+                    </label>
+                    <label class="checkbox inline">
+                      <input type="checkbox" id="inlineCheckbox3" name="daycheck" value="2">Tuesday 
+                    </label>
+                    <label class="checkbox inline">
+                      <input type="checkbox" id="inlineCheckbox4" name="daycheck" value="3">Wednesday
+                    </label>
+                    <label class="checkbox inline">
+                      <input type="checkbox" id="inlineCheckbox5" name="daycheck" value="4">Thursday
+                    </label>
+                    <br/>
+                    <label class="checkbox inline">
+                      <input type="checkbox" id="inlineCheckbox6" name="daycheck" value="5">Friday
+                    </label>
+                    <label class="checkbox inline">
+                      <input type="checkbox" id="inlineCheckbox7" name="daycheck" value="6">Saturday
+                    </label> 
+                    <br/>       
+                  </div>
+                </div>
+                <div class="row-fluid">
+                  <div class="span12">
+                    <br/>
+                      <label class="newloc">Description</label>
+                      <textarea id='desc' rows="4"></textarea>
+                  </div>
+                </div>               
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                <input type="submit" class="btn btn-primary" value="Add to Database">
+              </form>
+            </div>
+          </div>
+      </div>    
+    </div>        
+  </div>    
+</body>
+
+</html>
+{% endblock %}
+<!-- may want to create a second base template specifically for map, once there are other pages incorporated into the site -->
